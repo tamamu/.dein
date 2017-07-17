@@ -1,0 +1,347 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'rust-lang/rust.vim'
+
+[[plugins]]
+repo = 'racer-rust/vim-racer'
+
+#[[plugins]]
+#repo = 'luochen1990/rainbow'
+#hook_add = '''
+#  let g:rainbow_active=1
+#'''
+
+[[plugins]]
+repo = 'vim-scripts/paredit.vim'
+
+[[plugins]]
+repo = 'kovisoft/slimv'
+hook_add = '''
+  let g:slimv_swank_cmd='! xterm -e ros run --load ~/.roswell/lisp/swank/2016.10.31/start-swank.lisp &'
+  let g:slimv_lisp="ros -Q run"
+  let g:slimv_impl="sbcl"
+  let g:slimv_browser_cmd="lynx"
+  let g:slimv_repl_split=2
+  let g:slimv_indent_keylists=1
+  let g:slimv_leader='\'
+  let g:paredit_mode=1
+  let g:paredit_electric_return = 0
+  let g:paredit_leader='`'
+  let g:lisp_rainbow=1
+  nmap <Space>h `<
+  nmap <Space>l `>
+'''
+
+[[plugins]]
+repo = 'othree/html5.vim'
+
+[[plugins]]
+repo = 'hokaccha/vim-html5validator'
+
+[[plugins]]
+repo = 'hail2u/vim-css3-syntax'
+
+[[plugins]]
+repo = 'othree/yajs.vim'
+
+[[plugins]]
+repo = 'othree/es.next.syntax.vim'
+
+[[plugins]]
+repo = 'elmcast/elm-vim'
+
+[[plugins]]
+repo = 'vim-jp/cpp-vim'
+
+[[plugins]]
+repo = 'fatih/vim-go'
+hook_add = '''
+  let g:go_fmt_command = "goimports"
+'''
+
+[[plugins]]
+repo = 'tyru/eskk.vim'
+
+[[plugins]]
+repo = 'nathanaelkane/vim-indent-guides'
+
+[[plugins]]
+repo = 'bronson/vim-trailing-whitespace'
+
+[[plugins]]
+repo = 'kana/vim-submode'
+
+[[plugins]] # Status line
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+filetype off
+set rtp+=~/.cache/dein/repos/github.com/itchyny/lightline.vim
+filetype plugin indent on
+set laststatus=2
+set noshowmode
+let g:lightline = {
+			\'colorscheme': 'synthwave',
+			\'enable': { 'tabline': 1 },
+			\'mode_map': {'c': 'NORMAL'},
+			\'active': {
+			\	'left': [
+			\		['mode', 'paste'],
+			\		['fugitive', 'gitgutter', 'filename'],
+			\	],
+			\	'right': [
+			\		['lineinfo', 'syntastic'],
+			\		['percent'],
+			\		['fileformart', 'fileencoding', 'filetype'],
+			\	]
+			\},
+			\'component_function': {
+			\	'modified': 'MyModified',
+			\ 'readonly': 'MyReadOnly',
+			\ 'fugitive':	'MyFugitive',
+			\	'filename':	'MyFilename',
+			\ 'fileformat': 'MyFileFileformat',
+			\ 'filetype':	'MyFiletype',
+			\	'fileencoding': 'MyFileencoding',
+			\	'mode': 'MyMode',
+			\	'syntastic': 'SyntasticStatuslineFlag',
+			\	'charcode': 'MyCharCode',
+			\	'gitgutter': 'MyGitGutter',
+			\},
+			\	'separator': {'left': "\u2b80", 'right': "\u2b82"},
+			\	'subseparator': {'left': "\u2b81", 'right': "\u2b83"}
+			\}
+
+function! MyModified()
+	return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+	return &ft !~? 'help\|vimfiler\|gundo' && &ro ? '⭤' : ''
+endfunction
+
+function! MyFilename()
+	return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+				\ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+				\  &ft == 'unite' ? unite#get_status_string() :
+				\  &ft == 'vimshell' ? substitute(b:vimshell.current_dir,expand('~'),'~','') :
+				\ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+				\ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+	try
+		if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+			let _ = fugitive#head()
+			return strlen(_) ? '⭠ '._ : ''
+		endif
+	catch
+	endtry
+	return ''
+endfunction
+
+function! MyFileformat()
+	return winwidth('.') > 70 ? &fileformat : ''
+endfunction
+
+function! MyNERDFileformat()
+	return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+function! MyFiletype()
+	return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyNERDFiletype()
+	return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+	return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+	return winwidth('.') > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyGitGutter()
+	if ! exists('*GitGutterGetHunkSummary')
+				\ || ! get(g:, 'gitgutter_enabled', 0)
+				\ || winwidth('.') <= 90
+		return ''
+	endif
+	let symbols = [
+				\ g:gitgutter_sign_added . ' ',
+				\ g:gitgutter_sign_modified . ' ',
+				\ g:gitgutter_sign_removed . ' '
+				\ ]
+	let hunks = GitGutterGetHunkSummary()
+	let ret = []
+	for i in [0, 1, 2]
+		if hunks[i] > 0
+			call add(ret, symbols[i] . hunks[i])
+		endif
+	endfor
+	return join(ret, ' ')
+endfunction
+
+" https://github.com/Lokaltog/vim-powerline/blob/develop/autoload/Powerline/Functions.vim
+function! MyCharCode()
+	if winwidth('.') <= 70
+		return ''
+	endif
+
+	" Get the output of :ascii
+	redir => ascii
+	silent! ascii
+	redir END
+
+	if match(ascii, 'NUL') != -1
+		return 'NUL'
+	endif
+
+	" Zero pad hex values
+	let nrformat = '0x%02x'
+
+	let encoding = (&fenc == '' ? &enc : &fenc)
+
+	if encoding == 'utf-8'
+		" Zero pad with 4 zeroes in unicode files
+		let nrformat = '0x%04x'
+	endif
+
+	" Get the character and the numeric value from the return value of :ascii
+	" This matches the two first pieces of the return value, e.g.
+	" "<F>  70" => char: 'F', nr: '70'
+	let [str, char, nr; rest] = matchlist(ascii, '\v\<(.{-1,})\>\s*([0-9]+)')
+
+	" Format the numeric value
+	let nr = printf(nrformat, nr)
+
+	return "'". char ."' ". nr
+endfunction
+
+let g:airline_powerline_fonts = 1
+set guifont=InconsolataForPowerline\ Nerd\ Font\ Medium\ 10
+
+if !has('gui_running')
+	set t_Co=256
+endif
+
+let g:gitgutter_highlight_lines = 1
+set updatetime=250
+
+let g:NERDTreeIndicatorMapCustom = {
+			\ "Modified"  : "✹",
+			\ "Staged"    : "✚",
+			\ "Untracked" : "✭",
+			\ "Renamed"   : "➜",
+			\ "Unmerged"  : "═",
+			\ "Deleted"   : "✖",
+			\ "Dirty"     : "✗",
+			\ "Clean"     : "✔︎",
+			\ "Unknown"   : "?"
+			\ }
+
+let g:NERDTreeDirArrows = 1
+let NERDTreeWinSize=22
+
+" vim-devicons
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+
+" dir-icons
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = ''
+let g:DevIconsDefaultFolderOpenSymbol = ''
+" file-icons
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['html'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['css'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['txt'] = ''
+
+function! StrTrim(txt)
+	return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
+'''
+
+[[plugins]]
+repo = 'cocopon/vaffle.vim'
+
+[[plugins]] # Toml
+repo = 'cespare/vim-toml'
+on_ft = 'toml'
+
+[[plugins]] # Color scheme
+repo = 'exitface/synthwave.vim'
+hook_add = '''
+  set background=dark
+  au MyAutoCmd VimEnter * nested colorscheme synthwave
+  if has('termguicolors')
+    set termguicolors
+  else
+    let g:synthwave_termcolors=256
+  endif
+'''
+
+[[plugins]] # Multiple cursors
+repo = 'terryma/vim-multiple-cursors'
+
+[[plugins]]
+repo = 'osyo-manga/vim-precious'
+hook_add = '''
+  let g:precious_enable_switch_CursorMoved = {
+  \  "*" : 0
+  \}
+  let g:precious_enable_switch_CursorMoved_i = {
+  \  "*" : 0
+  \}
+
+  augroup test
+    autocmd!
+    autocmd InsertEnter * :PreciousSwitch
+    autocmd InsertLeave * :PreciousReset
+  augroup END
+'''
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
+[[plugins]]
+repo = 'kana/vim-textobj-user'
+
+[[plugins]]
+repo = 'osyo-manga/vim-textobj-multiblock'
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]] # Startup
+repo = 'mhinz/vim-startify'
+hook_add = '''
+  let g:startify_list_order = [
+  \ ['♻  History:'],
+  \ 'files',
+  \ ['♲  History (under current dir):'],
+  \ 'dir',
+  \ ['⚑  Session:'],
+  \ 'sessions',
+  \ ['☺  Bookmarks:'],
+  \ 'bookmarks',
+  \]
+  let g:startify_bookmarks = ['~/.config/nvim/init.vim']
+  function! s:filter_header(lines) abort
+    let longest_line = max(map(copy(a:lines), 'len(v:val)'))
+    let centered_lines = map(copy(a:lines),
+      \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+    return centerd_lines
+  endfunction
+'''
+

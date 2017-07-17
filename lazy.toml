@@ -1,0 +1,34 @@
+[[plugins]] # Emmet
+repo = 'mattn/emmet-vim'
+on_i = 1
+hook_source = '''
+  let g:user_emmet_mode = 'i'
+  let g:user_emmet_leader_key='<C-E>'
+  let g:use_emmet_complete_tag = 1
+  let g:user_emmet_settings = {
+  \ 'variables': {
+  \   'lang': 'ja'
+  \ },
+  \ 'indentation': '  '
+  \}
+'''
+
+[[plugins]]
+repo = 'Shougo/neosnippet'
+hook_source = '''
+  imap <C-K> <Plug>(neosnippet_expand_or_jump)
+  smap <C-K> <Plug>(neosnippet_expand_or_jump)
+  xmap <C-K> <Plug>(neosnippet_expand_target)
+  if has('conceal')
+    set conceallevel=2 concealcursor=niv
+  endif
+
+  let g:neosnippet#snippets_directory='~/.config/nvim/snippets/'
+'''
+on_i = 1
+on_ft = ['snippet']
+depends = ['neosnippet-snippets']
+
+[[plugins]]
+repo = 'ryanoasis/vim-devicons'
+depends = ['lightline.vim']

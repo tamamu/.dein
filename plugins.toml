@@ -323,6 +323,12 @@ repo = 'osyo-manga/vim-textobj-multiblock'
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
+[[plugins]]
+repo = 'metakirby5/codi.vim'
+
+[[plugins]] # Scala
+repo = 'derekwyatt/vim-scala'
+
 [[plugins]] # Startup
 repo = 'mhinz/vim-startify'
 hook_add = '''

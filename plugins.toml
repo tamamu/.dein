@@ -5,6 +5,15 @@ repo = 'Shougo/dein.vim'
 repo = 'tpope/vim-fugitive'
 
 [[plugins]]
+repo = 'neoclide/coc.nvim'
+type = 'git'
+#rev = '*'
+build = 'yarn install'
+#hook_post_update = '''
+#call coc#util#install()
+#'''
+
+[[plugins]]
 repo = 'rust-lang/rust.vim'
 
 [[plugins]]
@@ -85,7 +94,7 @@ filetype plugin indent on
 set laststatus=2
 set noshowmode
 let g:lightline = {
-			\'colorscheme': 'synthwave',
+			\'colorscheme': 'powerline',
 			\'enable': { 'tabline': 1 },
 			\'mode_map': {'c': 'NORMAL'},
 			\'active': {
@@ -279,16 +288,28 @@ repo = 'cocopon/vaffle.vim'
 repo = 'cespare/vim-toml'
 on_ft = 'toml'
 
+#[[plugins]] # Color scheme
+#repo = 'exitface/synthwave.vim'
+#hook_add = '''
+#  set background=none
+#  au MyAutoCmd VimEnter * nested colorscheme synthwave
+#  if has('termguicolors')
+#    set termguicolors
+#  else
+#    let g:synthwave_termcolors=256
+#  endif
+#'''
+
 [[plugins]] # Color scheme
-repo = 'exitface/synthwave.vim'
+repo = 'kaicataldo/material.vim'
 hook_add = '''
   set background=dark
-  au MyAutoCmd VimEnter * nested colorscheme synthwave
-  if has('termguicolors')
+  colorscheme material
+  if (has("termguicolors"))
     set termguicolors
-  else
-    let g:synthwave_termcolors=256
   endif
+  let g:material_theme_style = 'dark' "| 'default' | 'palenight'
+  let g:lightline = { 'colorscheme': 'material_vim' }
 '''
 
 [[plugins]] # Multiple cursors

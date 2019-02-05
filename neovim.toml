@@ -5,6 +5,10 @@ depends = 'context_filetype.vim'
 on_event = 'InsertEnter'
 on_i = 1
 hook_source = '''
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#enable_ignore_case = 1
   let g:deoplete#enable_smart_case = 1
